@@ -10,15 +10,6 @@ typedef struct pos
     int r;
 } POS;
 
-/* 소수의 배신
-double distance(POS p1, POS p2)
-{
-    double d;
-    d = (double)sqrt(pow(p1.x-p2.x, 2)+pow(p1.y-p2.y, 2));
-    return d;
-}
-*/
-
 int distance(POS p1, POS p2) //ditch sqrt()
 {
     int dsq;
@@ -26,18 +17,27 @@ int distance(POS p1, POS p2) //ditch sqrt()
     return dsq;
 }
 
-void calc(int * result, int iter)
+int calc(void)
 {
     POS c1, c2;
     scanf("%d %d %d %d %d %d", &c1.x, &c1.y, &c1.r, &c2.x, &c2.y, &c2.r);
-    if(distance(c1, c2)==0 && c1.r==c2.r)
-        result[iter] = -1;
-    else if(distance(c1, c2)==SQUARE(c1.r+c2.r))
-        result[iter] = 1;
-    else if(distance(c1, c2)<SQUARE(c1.r+c2.r))
-        result[iter] = 2;
+    int d = distance(c1, c2);
+    if(d==0)
+    {
+        if(c1.r==c2.r)
+            return -1;
+        else 
+            return 0;
+    }
     else 
-        result[iter] = 0;
+    {
+        if(SQUARE(c1.r-c2.r)<d && d<SQUARE(c1.r+c2.r))
+            return 2;
+        if(d==SQUARE(c1.r+c2.r) || d==SQUARE(c1.r-c2.r))
+            return 1;
+        else
+            return 0;
+    }
 }
 
 int main(void)
@@ -51,7 +51,7 @@ int main(void)
     }
     for(int i=0;i<num;i++)
     {
-        calc(result, i);
+        result[i] = calc();
     }   
     for(int i=0;i<num;i++)
     {
